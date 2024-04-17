@@ -180,6 +180,24 @@ class XamarinBundledAssembly(XamarinBase):
         self.data = data[self.data_start:]
 
         return self
+    def read_manifest(self):
+        if self._manifest is not None:
+            return self._manifest
+        result = {}
+        if self.manifest_path is not None:
+            with open(self.manifest_path, "rt") as manifest_file:
+                header = True
+                while line := manifest_file.readline():
+                    if header:
+                        header = False
+                        continue
+                    cols = line.split()
+                    assert len(cols) == 5
+                    _id = cols[1][2:]
+                    name = cols[4]
+                    result[_id] = name
+        self._manifest = result
+        return result
 
     def write(self, dirpath:Path) -> None:
         "Write uncompressed data to <dirpath>"
@@ -244,10 +262,15 @@ class XamarinBundledAssembly(XamarinBase):
 
         for f in files:
             if f['data_name'] is not None:
+                file_name = Path(f['data_name'])
+                if self.manifest_path is not None:
+                    manifest = self.read_manifest()
+                    pretty_name = manifest[file_name.stem]
+                    file_name = file_name.with_stem(pretty_name)
                 if type(f['asm']) is XamarinCompressedAssembly:
-                    f['asm'].write(dirpath / f['data_name'])
+                    f['asm'].write(dirpath / file_name)
                 else:
-                    with open(dirpath / f['data_name'], "wb") as io:
+                    with open(dirpath / file_name, "wb") as io:
                         io.write(f['asm'])
             if f['debug_name'] is not None:
                 with open(dirpath / f['debug_name'], "wb") as io:

@@ -1,6 +1,8 @@
 class XamarinBase:
-    def __init__(self, filepath=None) -> None:
+    def __init__(self, filepath=None, manifest_path=None) -> None:
         self.filepath = filepath
+        self.manifest_path = manifest_path
+        self._manifest = None
         if filepath is not None:
             self.from_file(filepath)
     
