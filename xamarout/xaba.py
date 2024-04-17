@@ -2,9 +2,9 @@ import sys
 import logging
 from binascii import hexlify
 from struct import unpack
-from util import FileSignatureError
-from base import XamarinBase
-from xalz import XamarinCompressedAssembly
+from .util import FileSignatureError
+from .base import XamarinBase
+from .xalz import XamarinCompressedAssembly
 
 #https://github.com/xamarin/xamarin-android/blob/d0701eb75e096f53e3c070fc6cdbad6d7477afba/src/monodroid/jni/xamarin-app.hh
 #https://github.com/xamarin/xamarin-android/blob/c92702619f5fabcff0ed88e09160baf9edd70f41/Documentation/project-docs/AssemblyStores.md

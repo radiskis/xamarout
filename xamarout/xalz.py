@@ -2,8 +2,8 @@ import sys
 import logging
 from struct import unpack
 import lz4.block
-from util import FileSignatureError
-from base import XamarinBase
+from .util import FileSignatureError
+from .base import XamarinBase
 
 #https://github.com/xamarin/xamarin-android/blob/d0701eb75e096f53e3c070fc6cdbad6d7477afba/src/monodroid/jni/xamarin-app.hh
 #https://github.com/x41sec/tools/blob/master/Mobile/Xamarin/Xamarin_XALZ_decompress.py
