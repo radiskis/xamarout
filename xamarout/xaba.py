@@ -2,6 +2,7 @@ import sys
 import logging
 from binascii import hexlify
 from struct import unpack
+from pathlib import Path
 from .util import FileSignatureError
 from .base import XamarinBase
 from .xalz import XamarinCompressedAssembly
@@ -180,9 +181,10 @@ class XamarinBundledAssembly(XamarinBase):
 
         return self
 
-    def write(self, dirpath:str) -> None:
+    def write(self, dirpath:Path) -> None:
         "Write uncompressed data to <dirpath>"
-        #TODO: PosixPath
+        dirpath = Path(dirpath)
+        dirpath.mkdir(exist_ok=True)
         stores = []
 
         # build the hash->descriptor map
@@ -243,13 +245,13 @@ class XamarinBundledAssembly(XamarinBase):
         for f in files:
             if f['data_name'] is not None:
                 if type(f['asm']) is XamarinCompressedAssembly:
-                    f['asm'].write(dirpath+"/"+f['data_name'])
+                    f['asm'].write(dirpath / f['data_name'])
                 else:
-                    with open(dirpath+"/"+f['data_name'], "wb") as io:
+                    with open(dirpath / f['data_name'], "wb") as io:
                         io.write(f['asm'])
             if f['debug_name'] is not None:
-                with open(dirpath+"/"+f['debug_name'], "wb") as io:
+                with open(dirpath / f['debug_name'], "wb") as io:
                     io.write(f['debug_data'])
             if f['config_name'] is not None:
-                with open(dirpath+"/"+f['config_name'], "wb") as io:
+                with open(dirpath / f['config_name'], "wb") as io:
                     io.write(f['config_data'])
